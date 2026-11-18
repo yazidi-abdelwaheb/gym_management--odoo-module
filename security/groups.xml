@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+
+    <!-- ================================= -->
+    <!-- 1. APPLICATION CATEGORY          -->
+    <!-- ================================= -->
+
+    <record id="module_category_gym" model="ir.module.category">
+        <field name="name">Gym Management</field>
+        <field name="description">
+            Gym Management Application
+        </field>
+        <field name="sequence">30</field>
+    </record>
+
+
+    <!-- ================================= -->
+    <!-- 2. STAFF PRIVILEGE                -->
+    <!-- ================================= -->
+
+    <record id="privilege_gym_staff"
+            model="res.groups.privilege">
+
+        <field name="name">Gym Staff</field>
+
+        <field name="category_id"
+               ref="module_category_gym"/>
+
+        <field name="sequence">10</field>
+
+    </record>
+
+
+    <!-- ================================= -->
+    <!-- 3. ADMINISTRATOR GROUP            -->
+    <!-- ================================= -->
+
+    <record id="group_gym_admin" model="res.groups">
+
+        <field name="name">Gym Administrator</field>
+
+        <field name="privilege_id"
+               ref="privilege_gym_staff"/>
+
+        <field name="implied_ids"
+               eval="[(4, ref('base.group_user'))]"/>
+
+    </record>
+
+
+    <!-- ================================= -->
+    <!-- 4. RECEPTIONIST GROUP             -->
+    <!-- ================================= -->
+
+    <record id="group_gym_receptionist" model="res.groups">
+
+        <field name="name">Gym Receptionist</field>
+
+        <field name="privilege_id"
+               ref="privilege_gym_staff"/>
+
+        <field name="implied_ids"
+               eval="[(4, ref('base.group_user'))]"/>
+
+    </record>
+
+
+    <!-- ================================= -->
+    <!-- 5. COACH GROUP                    -->
+    <!-- ================================= -->
+
+    <record id="group_gym_coach" model="res.groups">
+
+        <field name="name">Gym Coach</field>
+
+        <field name="privilege_id"
+               ref="privilege_gym_staff"/>
+
+        <field name="implied_ids"
+               eval="[(4, ref('base.group_user'))]"/>
+
+    </record>
+
+
+    <!-- ================================= -->
+    <!-- 6. MEMBER PRIVILEGE               -->
+    <!-- ================================= -->
+
+    <record id="privilege_gym_member"
+            model="res.groups.privilege">
+
+        <field name="name">Gym Member</field>
+
+        <field name="category_id"
+               ref="module_category_gym"/>
+
+        <field name="sequence">20</field>
+
+    </record>
+
+
+    <!-- ================================= -->
+    <!-- 7. MEMBER GROUP                   -->
+    <!-- ================================= -->
+
+    <record id="group_gym_member" model="res.groups">
+
+        <field name="name">Gym Member</field>
+
+        <field name="privilege_id"
+               ref="privilege_gym_member"/>
+
+        <field name="implied_ids"
+               eval="[(4, ref('base.group_portal'))]"/>
+
+    </record>
+
+</odoo>

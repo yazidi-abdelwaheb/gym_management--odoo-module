@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="gym_management.GymDashboard">
+        <main class="o_gym_dashboard">
+            <header class="o_gym_dashboard__hero">
+                <div class="o_gym_dashboard__hero-copy">
+                    <span class="o_gym_dashboard__eyebrow">GYM MANAGEMENT</span>
+                    <h1>Your gym, in motion.</h1>
+                    <p>A clear view of your community, memberships, and momentum.</p>
+                </div>
+                <div class="o_gym_dashboard__hero-actions">
+                    <span class="o_gym_dashboard__live"><i class="fa fa-circle"/> Live overview</span>
+                    <button class="btn o_gym_dashboard__refresh" t-on-click="loadDashboard" t-att-disabled="state.loading">
+                        <i t-att-class="state.loading ? 'fa fa-refresh fa-spin' : 'fa fa-refresh'"/> Refresh
+                    </button>
+                </div>
+                <div class="o_gym_dashboard__hero-orbit o_gym_dashboard__hero-orbit--one"/>
+                <div class="o_gym_dashboard__hero-orbit o_gym_dashboard__hero-orbit--two"/>
+            </header>
+
+            <div t-if="state.error" class="alert alert-danger o_gym_dashboard__error" role="alert">
+                <strong>Dashboard could not be loaded.</strong>
+                <span t-esc="state.error"/>
+            </div>
+
+            <div t-if="state.loading" class="o_gym_dashboard__loading">
+                <i class="fa fa-circle-o-notch fa-spin"/> Loading your gym overview…
+            </div>
+
+            <t t-elif="!state.error">
+                <section class="o_gym_dashboard__metrics" aria-label="Gym metrics">
+                    <button class="o_gym_dashboard__metric o_gym_dashboard__metric--total" t-on-click="() => this.openMembers()">
+                        <span class="o_gym_dashboard__metric-icon"><i class="fa fa-users"/></span>
+                        <span class="o_gym_dashboard__metric-label">Total members</span>
+                        <strong t-esc="state.metrics.total"/>
+                        <span class="o_gym_dashboard__metric-note">Across your community</span>
+                    </button>
+                    <button class="o_gym_dashboard__metric o_gym_dashboard__metric--active" t-on-click="openActiveMembers">
+                        <span class="o_gym_dashboard__metric-icon"><i class="fa fa-bolt"/></span>
+                        <span class="o_gym_dashboard__metric-label">Active members</span>
+                        <strong t-esc="state.metrics.active"/>
+                        <span class="o_gym_dashboard__metric-note"><t t-esc="activePercentage"/>% of your members</span>
+                    </button>
+                    <button class="o_gym_dashboard__metric o_gym_dashboard__metric--new" t-on-click="openNewThisMonth">
+                        <span class="o_gym_dashboard__metric-icon"><i class="fa fa-line-chart"/></span>
+                        <span class="o_gym_dashboard__metric-label">Joined this month</span>
+                        <strong t-esc="state.metrics.newThisMonth"/>
+                        <span class="o_gym_dashboard__metric-note">New faces, fresh energy</span>
+                    </button>
+                    <button class="o_gym_dashboard__metric o_gym_dashboard__metric--inactive" t-on-click="openInactiveMembers">
+                        <span class="o_gym_dashboard__metric-icon"><i class="fa fa-pause"/></span>
+                        <span class="o_gym_dashboard__metric-label">Inactive members</span>
+                        <strong t-esc="state.metrics.inactive"/>
+                        <span class="o_gym_dashboard__metric-note">Ready to reconnect</span>
+                    </button>
+                </section>
+
+                <section class="o_gym_dashboard__panels">
+                    <article class="o_gym_dashboard__panel o_gym_dashboard__panel--growth">
+                        <div class="o_gym_dashboard__panel-heading">
+                            <div>
+                                <span class="o_gym_dashboard__eyebrow">GROWTH</span>
+                                <h2>Membership momentum</h2>
+                            </div>
+                            <span class="o_gym_dashboard__panel-caption">Last 6 months</span>
+                        </div>
+                        <div class="o_gym_dashboard__chart" role="img" aria-label="Member registrations over the last six months">
+                            <div class="o_gym_dashboard__chart-grid">
+                                <span t-foreach="[3, 2, 1, 0]" t-as="line" t-key="line"/>
+                            </div>
+                            <div class="o_gym_dashboard__bars">
+                                <button t-foreach="state.months" t-as="month" t-key="month.start"
+                                        class="o_gym_dashboard__bar-column"
+                                        t-att-title="month.count + ' members joined in ' + month.label"
+                                        t-on-click="() => this.openMonth(month)">
+                                    <span class="o_gym_dashboard__bar-value" t-esc="month.count"/>
+                                    <span class="o_gym_dashboard__bar-track">
+                                        <span class="o_gym_dashboard__bar" t-att-style="'height: ' + month.height"/>
+                                    </span>
+                                    <span class="o_gym_dashboard__bar-label" t-esc="month.label"/>
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="o_gym_dashboard__panel o_gym_dashboard__panel--pulse">
+                        <div class="o_gym_dashboard__panel-heading">
+                            <div>
+                                <span class="o_gym_dashboard__eyebrow">COMMUNITY</span>
+                                <h2>Member pulse</h2>
+                            </div>
+                            <i class="fa fa-heartbeat o_gym_dashboard__panel-mark"/>
+                        </div>
+                        <div class="o_gym_dashboard__pulse-content">
+                            <div class="o_gym_dashboard__donut" t-att-style="'--active-share: ' + activePercentage + '%'">
+                                <div class="o_gym_dashboard__donut-center">
+                                    <strong t-esc="activePercentage"/>%
+                                    <span>active</span>
+                                </div>
+                            </div>
+                            <div class="o_gym_dashboard__legend">
+                                <div><span class="o_gym_dashboard__legend-dot o_gym_dashboard__legend-dot--active"/>Active <strong t-esc="state.metrics.active"/></div>
+                                <div><span class="o_gym_dashboard__legend-dot o_gym_dashboard__legend-dot--inactive"/>Inactive <strong t-esc="state.metrics.inactive"/></div>
+                            </div>
+                        </div>
+                        <div class="o_gym_dashboard__gender">
+                            <div class="o_gym_dashboard__gender-heading">
+                                <span>Community mix</span>
+                                <span t-esc="genderTotal + ' members'"/>
+                            </div>
+                            <div class="o_gym_dashboard__gender-row">
+                                <span>Women</span>
+                                <div class="o_gym_dashboard__gender-track"><span class="o_gym_dashboard__gender-fill o_gym_dashboard__gender-fill--female" t-att-style="'width: ' + genderPercentage(state.gender.female) + '%'"/></div>
+                                <strong t-esc="state.gender.female"/>
+                            </div>
+                            <div class="o_gym_dashboard__gender-row">
+                                <span>Men</span>
+                                <div class="o_gym_dashboard__gender-track"><span class="o_gym_dashboard__gender-fill o_gym_dashboard__gender-fill--male" t-att-style="'width: ' + genderPercentage(state.gender.male) + '%'"/></div>
+                                <strong t-esc="state.gender.male"/>
+                            </div>
+                            <div class="o_gym_dashboard__gender-row">
+                                <span>Other</span>
+                                <div class="o_gym_dashboard__gender-track"><span class="o_gym_dashboard__gender-fill o_gym_dashboard__gender-fill--other" t-att-style="'width: ' + genderPercentage(state.gender.other) + '%'"/></div>
+                                <strong t-esc="state.gender.other"/>
+                            </div>
+                        </div>
+                    </article>
+                </section>
+
+                <section class="o_gym_dashboard__recent">
+                    <div class="o_gym_dashboard__panel-heading">
+                        <div>
+                            <span class="o_gym_dashboard__eyebrow">THE COMMUNITY</span>
+                            <h2>Recent members</h2>
+                        </div>
+                        <button class="o_gym_dashboard__text-button" t-on-click="() => this.openMembers()">
+                            View all <i class="fa fa-arrow-right"/>
+                        </button>
+                    </div>
+                    <div t-if="state.recentMembers.length" class="o_gym_dashboard__member-list">
+                        <button t-foreach="state.recentMembers" t-as="member" t-key="member.id"
+                                class="o_gym_dashboard__member-row"
+                                t-on-click="() => this.openMember(member)">
+                            <span class="o_gym_dashboard__avatar" t-esc="member.name ? member.name.slice(0, 1).toUpperCase() : '?'"/>
+                            <span class="o_gym_dashboard__member-main">
+                                <strong t-esc="member.name"/>
+                                <small t-esc="member.email || 'No email address'"/>
+                            </span>
+                            <span class="o_gym_dashboard__member-date" t-esc="formatDate(member.registration_date)"/>
+                            <span t-att-class="member.active ? 'o_gym_dashboard__status o_gym_dashboard__status--active' : 'o_gym_dashboard__status o_gym_dashboard__status--inactive'">
+                                <span/> <t t-esc="member.active ? 'Active' : 'Inactive'"/>
+                            </span>
+                            <i class="fa fa-chevron-right o_gym_dashboard__member-arrow"/>
+                        </button>
+                    </div>
+                    <div t-else="" class="o_gym_dashboard__empty">
+                        <i class="fa fa-users"/>
+                        <strong>Your community starts here</strong>
+                        <span>Add your first member to see them here.</span>
+                    </div>
+                </section>
+            </t>
+        </main>
+    </t>
+</templates>

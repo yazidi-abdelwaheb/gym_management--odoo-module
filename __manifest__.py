@@ -1,33 +1,44 @@
+
 {
-    'name': "gym_management",
-
-    'summary': "Short (1 phrase/line) summary of the module's purpose",
-
+    'name': 'Gym Management',
+    'summary': 'Gym member management with automatic portal accounts',
     'description': """
-Long description of module's purpose
+        Manage gym members, their contact details, registration dates,
+        profile pictures, and linked Odoo portal accounts with email invitations.
     """,
 
-    'author': "My Company",
-    'website': "https://www.yourcompany.com",
+    'author': 'Abdelwaheb Yazidi',
+    'website': 'https://github.com/yazidi-abdelwaheb',
 
-    # Categories can be used to filter modules in modules listing
-    # Check https://github.com/odoo/odoo/blob/20.0/odoo/addons/base/data/ir_module_category_data.xml
-    # for the full list
-    'category': 'Uncategorized',
-    'version': '0.1',
+    'category': 'Services',
+    'version': '20.0.1.0.0',
 
-    # any module necessary for this one to work correctly
-    'depends': ['base'],
+    'depends': [
+        'base',
+        'portal',
+    ],
 
-    # always loaded
     'data': [
-        # 'security/ir.model.access.csv',
-        'views/views.xml',
+        'security/groups.xml',
+        'security/ir.access.csv',
+        'security/rules.xml',
+        'views/gym_member_views.xml',
+        'views/gym_menus.xml',
         'views/templates.xml',
     ],
-    # only loaded in demonstration mode
+
+    'assets': {
+        'web.assets_backend': [
+            'gym_management/static/src/js/gym_dashboard.js',
+            'gym_management/static/src/xml/gym_dashboard.xml',
+            'gym_management/static/src/scss/gym_dashboard.scss',
+        ],
+    },
+
     'demo': [
         'demo/demo.xml',
     ],
-}
 
+    'application': True,
+    'installable': True,
+}
