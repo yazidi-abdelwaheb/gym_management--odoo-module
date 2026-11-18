@@ -1,5 +1,5 @@
-id,name,model_id:id,group_id:id,operation,domain
-access_gym_member_admin,gym.member.admin,model_gym_member,gym_management.group_gym_admin,crud,
-access_gym_member_receptionist,gym.member.receptionist,model_gym_member,gym_management.group_gym_receptionist,crud,
-access_gym_member_coach,gym.member.coach,model_gym_member,gym_management.group_gym_coach,r,
-access_gym_member_portal,gym.member.portal,model_gym_member,gym_management.group_gym_member,r,
+id,name,model_id,group_id/id,operation,domain
+access_gym_member_admin,gym.member.admin,gym.member,gym_management.group_gym_admin,crud,
+access_gym_member_receptionist,gym.member.receptionist,gym.member,gym_management.group_gym_receptionist,crud,
+access_gym_member_coach,gym.member.coach,gym.member,gym_management.group_gym_coach,r,
+access_gym_member_portal,gym.member.portal,gym.member,gym_management.group_gym_member,r,"[('user_id', '=', user.id)]"

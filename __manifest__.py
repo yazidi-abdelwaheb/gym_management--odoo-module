@@ -21,7 +21,6 @@
     'data': [
         'security/groups.xml',
         'security/ir.access.csv',
-        'security/rules.xml',
         'views/gym_member_views.xml',
         'views/gym_menus.xml',
         'views/templates.xml',
